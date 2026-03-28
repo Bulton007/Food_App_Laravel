@@ -26,14 +26,4 @@ class CategoryController extends Controller
             'data' => $category
         ]);
     }
-    public function run(): void
-    {
-        DB::table('categories')->insert([
-            ['name' => 'Burger'],
-            ['name' => 'Pizza'],
-            ['name' => 'Spaghetti'],
-            ['name' => 'Sandwich'],
-            ['name' => 'Chicken Nugget'],
-        ]);
-    }
 }

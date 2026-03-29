@@ -24,28 +24,32 @@ class ProductController extends Controller
     // CREATE PRODUCT (POST)
     public function store(Request $request)
     {
-        $product = Product::create([
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'price' => $request->price,
-            'rating' => $request->rating,
-            'category_id' => $request->category_id
-        ]);
+    $product = Product::create([
+        'title' => $request->title,
+        'subtitle' => $request->subtitle,
+        'price' => $request->price,
+        'rating' => $request->rating,
+        'category_id' => $request->category_id
+    ]);
 
-        // Save multiple images
-        if ($request->images) {
-            foreach ($request->images as $img) {
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_url' => $img
-                ]);
-            }
+    // ✅ HANDLE IMAGE FILE UPLOAD
+    if ($request->hasFile('images')) {
+
+        foreach ($request->file('images') as $file) {
+
+            $path = $file->store('products', 'public');
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image_url' => asset('storage/' . $path)
+            ]);
         }
+    }
 
-        return response()->json([
-            'message' => 'Product created',
-            'data' => $product
-        ], 201);
+    return response()->json([
+        'message' => 'Product created',
+        'data' => $product->load('images', 'category')
+    ], 201);
     }
 
     // UPDATE PRODUCT (PUT)

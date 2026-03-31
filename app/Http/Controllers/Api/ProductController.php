@@ -35,16 +35,23 @@ class ProductController extends Controller
     // ✅ HANDLE IMAGE
     if ($request->hasFile('images')) {
 
-        foreach ($request->file('images') as $file) {
+    $files = $request->file('images');
 
-            $path = $file->store('products', 'public');
-
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image_url' => asset('storage/' . $path)
-            ]);
-        }
+    // 🔥 HANDLE SINGLE FILE OR ARRAY
+    if (!is_array($files)) {
+        $files = [$files];
     }
+
+    foreach ($files as $file) {
+
+        $path = $file->store('products', 'public');
+
+        ProductImage::create([
+            'product_id' => $product->id,
+            'image_url' => asset('storage/' . $path)
+        ]);
+    }
+}
 
     return response()->json([
         'message' => 'Product created',

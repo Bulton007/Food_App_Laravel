@@ -22,8 +22,8 @@ class ProductController extends Controller
     }
 
     // CREATE PRODUCT (POST)
-    public function store(Request $request)
-    {
+   public function store(Request $request)
+{
     $product = Product::create([
         'title' => $request->title,
         'subtitle' => $request->subtitle,
@@ -32,21 +32,25 @@ class ProductController extends Controller
         'category_id' => $request->category_id
     ]);
 
-    // ✅ HANDLE IMAGE FILE UPLOAD
-    if ($request->has('images')) {
-    foreach ($request->images as $img) {
-        ProductImage::create([
-            'product_id' => $product->id,
-            'image_url' => $img
-        ]);
+    // 🔥 HANDLE IMAGE FILE
+    if ($request->hasFile('images')) {
+
+        foreach ($request->file('images') as $file) {
+
+            $path = $file->store('products', 'public');
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image_url' => asset('storage/' . $path)
+            ]);
+        }
     }
-}
 
     return response()->json([
         'message' => 'Product created',
         'data' => $product->load('images', 'category')
-    ], 201);
-    }
+    ]);
+}
 
     // UPDATE PRODUCT (PUT)
     public function update(Request $request, $id)

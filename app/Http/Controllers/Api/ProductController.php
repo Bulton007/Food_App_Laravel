@@ -33,18 +33,14 @@ class ProductController extends Controller
     ]);
 
     // ✅ HANDLE IMAGE FILE UPLOAD
-    if ($request->hasFile('images')) {
-
-        foreach ($request->file('images') as $file) {
-
-            $path = $file->store('products', 'public');
-
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image_url' => asset('storage/' . $path)
-            ]);
-        }
+    if ($request->has('images')) {
+    foreach ($request->images as $img) {
+        ProductImage::create([
+            'product_id' => $product->id,
+            'image_url' => $img
+        ]);
     }
+}
 
     return response()->json([
         'message' => 'Product created',

@@ -32,7 +32,7 @@ class ProductController extends Controller
         'category_id' => $request->category_id
     ]);
 
-    // 🔥 HANDLE IMAGE FILE
+    // ✅ HANDLE IMAGE
     if ($request->hasFile('images')) {
 
         foreach ($request->file('images') as $file) {

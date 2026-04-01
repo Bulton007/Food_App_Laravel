@@ -31,7 +31,10 @@ public function store(Request $request)
         'rating' => $request->rating,
         'category_id' => $request->category_id
     ]);
-
+dd([
+    'hasFile' => $request->hasFile('images'),
+    'files' => $request->file('images')
+]);
     if ($request->hasFile('images')) {
 
         $files = $request->file('images');

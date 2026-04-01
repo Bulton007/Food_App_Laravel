@@ -31,21 +31,25 @@ public function store(Request $request)
         'rating' => $request->rating,
         'category_id' => $request->category_id
     ]);
+
+    // 🔥 HANDLE IMAGE
     if ($request->hasFile('images')) {
 
         $files = $request->file('images');
 
-        // ✅ FIX: handle single or multiple
         if (!is_array($files)) {
             $files = [$files];
         }
 
         foreach ($files as $file) {
 
-           $filename = time() . '_' . $file->getClientOriginalName();
+            // ✅ generate filename
+            $filename = time() . '_' . $file->getClientOriginalName();
 
+            // ✅ MOVE to public/uploads
             $file->move(public_path('uploads'), $filename);
 
+            // ✅ SAVE URL
             ProductImage::create([
                 'product_id' => $product->id,
                 'image_url' => url('uploads/' . $filename)

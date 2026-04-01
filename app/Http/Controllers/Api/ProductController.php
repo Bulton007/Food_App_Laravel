@@ -42,11 +42,13 @@ public function store(Request $request)
 
         foreach ($files as $file) {
 
-            $path = $file->store('products', 'public');
+           $filename = time() . '_' . $file->getClientOriginalName();
+
+            $file->move(public_path('uploads'), $filename);
 
             ProductImage::create([
                 'product_id' => $product->id,
-                'image_url' => asset('storage/' . $path)
+                'image_url' => url('uploads/' . $filename)
             ]);
         }
     }
